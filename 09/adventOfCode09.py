@@ -1,62 +1,47 @@
 #
-# Advent of code 03
+# Advent of code 09
 #
 import os
 import sys
-import re
-import numpy 
 script_folder_path = os.path.dirname(os.path.abspath(sys.argv[0]))
 lineFilePath = script_folder_path + "\\data.txt"
 fileContent = open(lineFilePath).read()
-total = 0
 
-def GetWholeNumberAndId(idChar, idLine):
-    exitLoop = True
-    id = idChar+1
-    fullNumber = str(fileContent.split("\n")[idLine][idChar])
-    while(exitLoop):
-        if(id >= len(fileContent.split("\n")[idLine])):
-            exitLoop = False
-            break
-        if((fileContent.split("\n")[idLine])[id].isnumeric()):
-            fullNumber += str((fileContent.split("\n")[idLine])[id])
-        else:
-            exitLoop = False
-        id+= 1
-    return fullNumber
+record = []
+lastOasisInfo = None
 
-def isNumberNearSymbols(idChar, idLine, char):
-    isNumberNearSymbolsResult = False
-    regex = re.compile(r'[^0-9.]+')
-    stringToCheck = ""
-    charToCheck = [0,0]
-    if (int(idChar + len(char)) <= len(fileContent.split("\n")[idLine])-1):
-        charToCheck[1] = int(idChar + len(char))
-        stringToCheck += fileContent.split("\n")[idLine][charToCheck[1]]
-    if(charId-1 >= 0):
-        charToCheck[0] = charId-1
-        stringToCheck += fileContent.split("\n")[idLine][charToCheck[0]]
-    if(idLine > 0):
-        stringToCheck += fileContent.split("\n")[idLine-1][charToCheck[0]:charToCheck[1]+1]
-    if(idLine < len(fileContent.split("\n"))-1):
-        stringToCheck += fileContent.split("\n")[idLine+1][charToCheck[0]:charToCheck[1]+1]
-    if((re.search(regex,stringToCheck))):
-       isNumberNearSymbolsResult = True
-    return isNumberNearSymbolsResult
+ExitWhile = False
 
-lineId = 0
-charId = 0
-lastIsNum = False
-for Line in fileContent.split("\n"):
-    for char in Line:
-        if char.isnumeric():
-            if(not Line[charId-1].isnumeric()):
-                if(isNumberNearSymbols(charId, lineId,GetWholeNumberAndId(charId, lineId))):
-                    total+=int(GetWholeNumberAndId(charId, lineId))
-                lastIsNum = True
-        charId+=1
-    lastIsNum = False
-    lineId+=1
-    charId=0
+def getDifference(listToCheck):
+    print("listToCheck: " + str(listToCheck))
+    listToReturn = []
+    lastItem = None
+    for item in listToCheck:
+  #      print("------------------")
+  #      print("item: " + str(item))
+  #      print("lastItem: " + str(lastItem))
+        if not (lastItem is None):
+            listToReturn.append(int(item) - int(lastItem))
+        lastItem = item
+    return listToReturn
 
-print("total: " + str(total))
+for OasisInfos in fileContent.split("\n"):
+    print("--------------------------------------------------")
+    print(OasisInfos)
+    #idaa = 0
+    while not ExitWhile:
+        #   print(idaa)
+        #   idaa+=1
+        if not record:
+            record.append(getDifference(OasisInfos.split(" ")))
+        elif record[-1][-1] != 0:
+        #    print("record[-1]: " + str(record[-1]))
+            record.append(getDifference(record[-1]))
+        elif record[-1][-1] == 0:
+            print("0 trouvé")
+            ExitWhile = True
+    print("RECORD: ")
+    print(record)
+    record = []
+    lastOasisInfo = None
+    ExitWhile = False
