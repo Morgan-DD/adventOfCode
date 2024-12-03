@@ -1,61 +1,48 @@
 #
-# Advent of code 02
+# Advent of code 02-1
 #
 import os
 import sys
-import re
+
 script_folder_path = os.path.dirname(os.path.abspath(sys.argv[0]))
-lineFilePath = script_folder_path + "\\data.txt"
-lines = open(lineFilePath).read()
+dataFilePath = script_folder_path + "\\data.txt"
+data = open(dataFilePath).read().split("\n")
 
-maxRedCube = 12
-maxGreenCube = 13
-maxBlueCube = 14
+NbSafeReport = 0
+NbNotSafeReport = 0
+isLineSafe = True
 
-tempRed = 0
-tempGreen = 0
-tempBlue = 0
+Increase = True
+LC = 0
+for line in data:
+    isLineSafe = True
+    Increase = True
+    numbers = line.split(" ")
+    for i in range(0, len(numbers)):
+        if i>0:
+            if int(numbers[i]) > int(numbers[i-1]) and Increase:
+                if not ((int(numbers[i]) - int(numbers[i-1])) in [1,2,3]):
+                    isLineSafe = False
+                    # print("/!\\ numbers[i] > numbers[i-1]")
+                    break
+            elif int(numbers[i]) < int(numbers[i-1]) and not Increase:
+                if not ((int(numbers[i-1]) - int(numbers[i])) in [1,2,3]):
+                    isLineSafe = False
+                    # print("/!\\ numbers[i] < numbers[i-1]")
+                    break
+            else:
+                isLineSafe = False
+                break
+        else:
+            if int(numbers[i+1]) < int(numbers[i]):
+                Increase = False
 
-idGame = 1
+    if isLineSafe:
+        NbSafeReport+=1
+    else:
+        print(line)
+        # print(Increase)
+        NbNotSafeReport+=1
 
-totalId = 0
-
-lines=lines.split("\n")
-test=""
-
-for line in lines:
-    line = line.split(":")[1]
-    line = line.replace(",", ";")
-    line = line.split(";")
-    print(line)
-    for cube in line:
-        number=re.sub("[A-z]","",cube)
-        cube=re.sub("[0-9 ]","",cube)
-        match (cube):
-            case ("green"):
-                if(int(number) > tempGreen):
-                    tempGreen=int(number)
-                test=test+" | green"
-            case("red"):
-                if(int(number) > tempRed):
-                    tempRed=int(number)
-                test=test+" | red"
-            case("blue"):
-                if(int(number) > tempBlue):
-                    tempBlue=int(number)
-                test=test+" | blue"
-    print(test)
-    if(tempRed <= maxRedCube and tempGreen <= maxGreenCube and tempBlue <= maxBlueCube):
-        totalId=totalId+idGame
-        print("possible, ID: " + str(idGame))
-        print("red: " + str(tempRed))
-        print("green: " + str(tempGreen))
-        print("blue: " + str(tempBlue))
-    tempRed = 0
-    tempGreen = 0
-    tempBlue = 0
-    idGame=idGame+1
-    test=""
-
-print("---------")
-print(totalId)
+print("Number of Safe Reports: " + str(NbSafeReport))
+print("Number of Unsafe Reports: " + str(NbNotSafeReport))

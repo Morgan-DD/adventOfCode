@@ -1,19 +1,19 @@
 #
-# Advent of code 01
+# Advent of code 01-2
 #
 import os
 import sys
 
 script_folder_path = os.path.dirname(os.path.abspath(sys.argv[0]))
 dataFilePath = script_folder_path + "\\data.txt"
-datas = open(dataFilePath).read()
+data = open(dataFilePath).read()
 
 similarityScore = 0
 
 Right = []
 Left = []
 
-for line in datas.split("\n"):
+for line in data.split("\n"):
     Left+=[line.split("   ")[0]]
     Right+=[line.split("   ")[1]]
 
