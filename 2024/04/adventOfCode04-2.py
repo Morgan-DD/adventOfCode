@@ -1,5 +1,5 @@
 #
-# Advent of code 03
+# Advent of code 04-2
 #
 import os
 import sys
