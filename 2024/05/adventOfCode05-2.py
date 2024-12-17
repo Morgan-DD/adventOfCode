@@ -5,8 +5,6 @@ import os
 import sys
 import re
 import math
-from logging import NullHandler
-from os.path import split
 
 script_folder_path = os.path.dirname(os.path.abspath(sys.argv[0]))
 lineFilePath = script_folder_path + "\\data.txt"

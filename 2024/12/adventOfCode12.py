@@ -1,62 +1,119 @@
 #
-# Advent of code 03
+# Advent of code 12-1
 #
 import os
 import sys
-import re
-import numpy 
+from PIL import Image
 script_folder_path = os.path.dirname(os.path.abspath(sys.argv[0]))
 lineFilePath = script_folder_path + "\\data.txt"
 fileContent = open(lineFilePath).read()
-total = 0
 
-def GetWholeNumberAndId(idChar, idLine):
-    exitLoop = True
-    id = idChar+1
-    fullNumber = str(fileContent.split("\n")[idLine][idChar])
-    while(exitLoop):
-        if(id >= len(fileContent.split("\n")[idLine])):
-            exitLoop = False
-            break
-        if((fileContent.split("\n")[idLine])[id].isnumeric()):
-            fullNumber += str((fileContent.split("\n")[idLine])[id])
-        else:
-            exitLoop = False
-        id+= 1
-    return fullNumber
+imgMultiplier = 1
 
-def isNumberNearSymbols(idChar, idLine, char):
-    isNumberNearSymbolsResult = False
-    regex = re.compile(r'[^0-9.]+')
-    stringToCheck = ""
-    charToCheck = [0,0]
-    if (int(idChar + len(char)) <= len(fileContent.split("\n")[idLine])-1):
-        charToCheck[1] = int(idChar + len(char))
-        stringToCheck += fileContent.split("\n")[idLine][charToCheck[1]]
-    if(charId-1 >= 0):
-        charToCheck[0] = charId-1
-        stringToCheck += fileContent.split("\n")[idLine][charToCheck[0]]
-    if(idLine > 0):
-        stringToCheck += fileContent.split("\n")[idLine-1][charToCheck[0]:charToCheck[1]+1]
-    if(idLine < len(fileContent.split("\n"))-1):
-        stringToCheck += fileContent.split("\n")[idLine+1][charToCheck[0]:charToCheck[1]+1]
-    if((re.search(regex,stringToCheck))):
-       isNumberNearSymbolsResult = True
-    return isNumberNearSymbolsResult
+im = Image.new(mode="RGB", size=(len(fileContent.split("\n")[0])*imgMultiplier, len(fileContent.split("\n")*imgMultiplier)))
 
-lineId = 0
-charId = 0
-lastIsNum = False
-for Line in fileContent.split("\n"):
-    for char in Line:
-        if char.isnumeric():
-            if(not Line[charId-1].isnumeric()):
-                if(isNumberNearSymbols(charId, lineId,GetWholeNumberAndId(charId, lineId))):
-                    total+=int(GetWholeNumberAndId(charId, lineId))
-                lastIsNum = True
-        charId+=1
-    lastIsNum = False
-    lineId+=1
-    charId=0
+showImage = False
 
-print("total: " + str(total))
+colors_rgb = [
+    (255, 0, 0),     # Red
+    (0, 255, 0),     # Green
+    (0, 0, 255),     # Blue
+    (255, 255, 0),   # Yellow
+    (0, 255, 255),   # Cyan
+    (255, 0, 255),   # Magenta
+    (255, 165, 0),   # Orange
+    (128, 0, 128),   # Purple
+    (255, 192, 203), # Pink
+    (165, 42, 42),   # Brown
+    (128, 128, 128), # Gray
+    (0, 0, 0),       # Black
+    (255, 255, 255), # White
+    (50, 205, 50),   # Lime
+    (128, 128, 0),   # Olive
+    (0, 128, 128),   # Teal
+    (0, 0, 128),     # Navy
+    (255, 215, 0),   # Gold
+    (255, 127, 80),  # Coral
+    (250, 128, 114), # Salmon
+    (64, 224, 208),  # Turquoise
+    (75, 0, 130),    # Indigo
+    (245, 245, 220), # Beige
+    (189, 252, 201), # Mint
+    (230, 230, 250), # Lavender
+    (220, 20, 60),   # Crimson
+]
+
+
+idPerLetter = {
+    "A":0,
+    "B":0,
+    "C":0,
+    "D":0,
+    "E":0,
+    "F":0,
+    "G":0,
+    "H":0,
+    "I":0,
+    "J":0,
+    "K":0,
+    "L":0,
+    "M":0,
+    "N":0,
+    "O":0,
+    "P":0,
+    "Q":0,
+    "R":0,
+    "S":0,
+    "T":0,
+    "U":0,
+    "V":0,
+    "W":0,
+    "X":0,
+    "Y":0,
+    "Z":0
+}
+
+y = 0
+x = 0
+nbBorders = 0
+for line in fileContent.splitlines():
+    x = 0
+    # print(line)
+    for char in line:
+        nbBorders = 0
+        for line in range(imgMultiplier):
+            for column in range(imgMultiplier):
+                im.putpixel((x*imgMultiplier+line,y*imgMultiplier+column), colors_rgb[ord(char) - 65])
+            try:
+                if line[x+1] != char:
+                    nbBorders+=1
+            except:
+                pass
+            try:
+                if line[x-1] != char:
+                    nbBorders+=1
+            except:
+                pass
+            try:
+                if fileContent.splitlines()[y+1][x] != char:
+                    nbBorders+=1
+            except:
+                pass
+            try:
+                if fileContent.splitlines()[y-1][x] != char:
+                    nbBorders+=1
+            except:
+                pass
+
+        # idPerLetter[char]+=[[x,y]]
+        x+=1
+    y+=1
+
+# print(idPerLetter)
+
+# for letter, ids in idPerLetter.items():
+    # print(letter)
+    # print(ids)
+
+if showImage:
+    im.show()
