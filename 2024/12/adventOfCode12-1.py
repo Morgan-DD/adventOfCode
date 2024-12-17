@@ -8,11 +8,17 @@ script_folder_path = os.path.dirname(os.path.abspath(sys.argv[0]))
 lineFilePath = script_folder_path + "\\data.txt"
 fileContent = open(lineFilePath).read()
 
-imgMultiplier = 1
+def getForm(initialChar):
+    refChar = fileContent.splitlines()[initialChar[0]][initialChar[1]]
+    print(refChar)
+
+imgMultiplier = 5
 
 im = Image.new(mode="RGB", size=(len(fileContent.split("\n")[0])*imgMultiplier, len(fileContent.split("\n")*imgMultiplier)))
 
 showImage = False
+
+scriptMod = False
 
 colors_rgb = [
     (255, 0, 0),     # Red
@@ -73,41 +79,58 @@ idPerLetter = {
     "Z":0
 }
 
+formFounded = []
+
+tempForm = []
+
 y = 0
 x = 0
 nbBorders = 0
-for line in fileContent.splitlines():
-    x = 0
-    # print(line)
-    for char in line:
-        nbBorders = 0
-        for line in range(imgMultiplier):
-            for column in range(imgMultiplier):
-                im.putpixel((x*imgMultiplier+line,y*imgMultiplier+column), colors_rgb[ord(char) - 65])
-            try:
-                if line[x+1] != char:
-                    nbBorders+=1
-            except:
-                pass
-            try:
-                if line[x-1] != char:
-                    nbBorders+=1
-            except:
-                pass
-            try:
-                if fileContent.splitlines()[y+1][x] != char:
-                    nbBorders+=1
-            except:
-                pass
-            try:
-                if fileContent.splitlines()[y-1][x] != char:
-                    nbBorders+=1
-            except:
-                pass
 
-        # idPerLetter[char]+=[[x,y]]
-        x+=1
-    y+=1
+actualChar = [0,0]
+
+if scriptMod:
+    for line in fileContent.splitlines():
+        x = 0
+        # print(line)
+        for char in line:
+            nbBorders = 0
+            for lineId in range(imgMultiplier):
+                for column in range(imgMultiplier):
+                    im.putpixel((x*imgMultiplier+lineId,y*imgMultiplier+column), colors_rgb[ord(char) - 65])
+                try:
+                    if line[x+1] != char:
+                        nbBorders+=1
+                except:
+                    pass
+                try:
+                    if line[x-1] != char:
+                        nbBorders+=1
+                except:
+                    pass
+                try:
+                    if fileContent.splitlines()[y+1][x] != char:
+                        nbBorders+=1
+                except:
+                    pass
+                try:
+                    if fileContent.splitlines()[y-1][x] != char:
+                        nbBorders+=1
+                except:
+                    pass
+
+            # idPerLetter[char]+=[[x,y]]
+            x+=1
+        y+=1
+else:
+    for line in fileContent.splitlines():
+        x = 0
+        for char in line:
+            actualChar = [x,y]
+            x+=1
+        y+=1
+
+getForm([0,0])
 
 # print(idPerLetter)
 
