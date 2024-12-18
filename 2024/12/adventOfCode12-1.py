@@ -9,14 +9,65 @@ lineFilePath = script_folder_path + "\\data.txt"
 fileContent = open(lineFilePath).read()
 
 def getForm(initialChar):
-    refChar = fileContent.splitlines()[initialChar[0]][initialChar[1]]
-    print(refChar)
+    charsToCheck = [initialChar]
+    charsCheked = []
+    for charToCheck in charsToCheck:
+        charsCheked += charToCheck
+        results = getNearChar(charToCheck, charsCheked)
+        for result in results:
+            if not result in charsToCheck:
+                charsToCheck += result
+
+def getNearChar(charToFind, alreadyDoneChar):
+    sameChar = []
+    CharXPos = charToFind[0]
+    CharYPos = charToFind[1]
+    print(charToFind)
+    refCharToCheck = fileContent.splitlines()[CharXPos][CharYPos]
+    if CharXPos-1 >= 0:
+        if fileContent.splitlines()[CharYPos][CharXPos-1] == refCharToCheck:
+            sameChar += [[CharXPos-1,CharYPos]]
+            print("←")
+    if CharXPos+1 < len(fileContent.splitlines()[0]):
+        if fileContent.splitlines()[CharYPos][CharXPos+1] == refCharToCheck:
+            sameChar += [[CharXPos+1,CharYPos]]
+            print("→")
+    if CharYPos-1 >= 0:
+        if fileContent.splitlines()[CharYPos-1][CharXPos] == refCharToCheck:
+            sameChar += [[CharXPos,CharYPos-1]]
+            print("↑")
+    if CharYPos+1 < len(fileContent.splitlines()):
+        if fileContent.splitlines()[CharYPos+1][CharXPos] == refCharToCheck:
+            sameChar += [[CharXPos,CharYPos+1]]
+            print("↓")
+    return sameChar
+
+def valueOnArray(_value, _array):
+    for _arrayItem in _array:
+        # print(_value)
+        # print(_array)
+        if _arrayItem == _value:
+            return True
+    return False
+
+def makeImages(pixelsToColor):
+    print(pixelsToColor)
+    imgMultiplierAlt = 5
+
+    imAlt = Image.new(mode="RGB",
+                   size=(len(fileContent.split("\n")[0]) * imgMultiplierAlt, len(fileContent.split("\n") * imgMultiplierAlt)))
+
+    for pixel in pixelsToColor:
+        for lineIdAlt in range(imgMultiplierAlt):
+            for columnAlt in range(imgMultiplierAlt):
+                imAlt.putpixel((pixel[0]*imgMultiplierAlt+lineIdAlt,pixel[1]*imgMultiplierAlt+columnAlt), (255,0,0))
+
 
 imgMultiplier = 5
 
 im = Image.new(mode="RGB", size=(len(fileContent.split("\n")[0])*imgMultiplier, len(fileContent.split("\n")*imgMultiplier)))
 
-showImage = False
+showImage = True
 
 scriptMod = False
 
@@ -130,7 +181,7 @@ else:
             x+=1
         y+=1
 
-getForm([0,0])
+getForm([1,1])
 
 # print(idPerLetter)
 
