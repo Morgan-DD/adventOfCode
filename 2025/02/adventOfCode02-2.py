@@ -1,5 +1,6 @@
 #
 # Advent of code 02-1
+# 4071083051782 >
 #
 import os
 import sys
@@ -12,6 +13,11 @@ def isValidId(myNumber):
     mid = len(myNumber) // 2
     if(myNumber[mid:] == myNumber[:mid]):
         return True
+    else:
+        if(hasEvenDigits(myNumber[mid:])):
+            return isValidId(str(myNumber[mid:]))
+        else:
+            return False
     
 
 script_folder_path = os.path.dirname(os.path.abspath(__file__))
@@ -23,7 +29,7 @@ invalidIDsTotal = 0
 for idRange in data :
     rangeStart, rangeEnd = idRange.split("-")
     for i in range(int(rangeStart), int(rangeEnd)):
-        if(hasEvenDigits(i)):
+        if(hasEvenDigits(str(i))):
             if(isValidId(str(i))):
                 invalidIDsTotal += i
 
